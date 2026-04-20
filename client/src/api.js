@@ -4,7 +4,16 @@
 // - Throws on non-2xx responses with a readable error.
 // - Returns already-parsed JSON.
 
-const BASE = import.meta.env.VITE_API_URL || "/api"
+// Normalize the API base URL. Render's Blueprint `fromService.property: host`
+// gives just a bare hostname (e.g. "orange-server.onrender.com"), so we add
+// https:// if no scheme is present. Bare "/api" (dev) is left alone.
+function resolveBase(raw) {
+  if (!raw) return "/api"
+  if (raw.startsWith("http://") || raw.startsWith("https://")) return raw
+  if (raw.startsWith("/")) return raw
+  return "https://" + raw
+}
+const BASE = resolveBase(import.meta.env.VITE_API_URL)
 
 function getToken() {
   return localStorage.getItem("orange.token") || ""
@@ -27,13 +36,23 @@ async function request(method, path, body) {
   const text = await res.text()
   const data = text ? safeJson(text) : null
   if (!res.ok) {
-    const msg = (data && data.error) || `HTTP ${res.status}`
+    const msg = (data && typeof data === "object" && data.error) || `HTTP ${res.status}`
     const err = new Error(msg)
     err.status = res.status
     err.data = data
     throw err
   }
-  return data
+  // If the server responded 2xx but the body isn't JSON (e.g. because the
+  // client is hitting the wrong origin and receiving an SPA index.html fallback),
+  // fail loudly instead of silently returning null/string — that used to produce
+  // "Cannot destructure property 'token' of null" with no clue what was wrong.
+  if (data !== null && typeof data !== "object") {
+    const err = new Error(`unexpected_response: server at ${BASE} returned non-JSON. Check VITE_API_URL.`)
+    err.status = res.status
+    err.data = data
+    throw err
+  }
+  return data || {}
 }
 function safeJson(t) { try { return JSON.parse(t) } catch { return t } }
 
