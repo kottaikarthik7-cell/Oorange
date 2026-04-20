@@ -1,0 +1,261 @@
+﻿node.exe : open C:\Users\k
+otta\.supabase\profile: 
+The system cannot find 
+the path specified.
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (o  
+  pen C:\Users\k...path   
+  specified.:String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+Loading project ref from 
+file: 
+supabase\.temp\project-ref
+Resolved DNS: [2406:da1a:6
+b0:f60f:5a5d:777b:861a:c19
+b]:5432
+Using database password 
+from env var...
+Supabase CLI 2.84.10
+Using profile: supabase 
+(supabase.co)
+Connecting to remote 
+database...
+2026/04/04 10:41:57 PG 
+Send: {"Type":"StartupMess
+age","ProtocolVersion":196
+608,"Parameters":{"databas
+e":"postgres","user":"post
+gres"}}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"Authenticat
+ionSASL","AuthMechanisms":
+["SCRAM-SHA-256"]}
+2026/04/04 10:41:57 PG 
+Send: {"Type":"SASLInitial
+Response","AuthMechanism":
+"SCRAM-SHA-256","Data":"n,
+,n=,r=GzsUtfh2OYQCQlUt9yqW
+E/n3"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"Authenticat
+ionSASLContinue","Data":"r
+=GzsUtfh2OYQCQlUt9yqWE/n3E
+QOQiw6NzCtCH4C+/HFQPupq,s=
+wRcH+K5V9iWkwBA89KoSgg==,i
+=4096"}
+2026/04/04 10:41:57 PG 
+Send: {"Type":"SASLRespons
+e","Data":"c=biws,r=GzsUtf
+h2OYQCQlUt9yqWE/n3EQOQiw6N
+zCtCH4C+/HFQPupq,p=4dsD/I8
+RCqZte2OePLjBWCDMTrucl+oQ6
+PVNvhyEgFc="}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"Authenticat
+ionSASLFinal","Data":"v=qd
+4UNE0XmIYV6RGHtmACDxJKY9ZY
+JUx8WisxO777kls="}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"Authenticat
+ionOK"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"in_hot_stand
+by","Value":"off"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"integer_date
+times","Value":"on"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"TimeZone","V
+alue":"UTC"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"IntervalStyl
+e","Value":"postgres"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"is_superuser
+","Value":"off"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"application_
+name","Value":""}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"default_tran
+saction_read_only","Value"
+:"off"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"scram_iterat
+ions","Value":"4096"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"DateStyle","
+Value":"ISO, MDY"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"standard_con
+forming_strings","Value":"
+on"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"session_auth
+orization","Value":"postgr
+es"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"client_encod
+ing","Value":"UTF8"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"server_versi
+on","Value":"17.6"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterSt
+atus","Name":"server_encod
+ing","Value":"UTF8"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"BackendKeyD
+ata","ProcessID":6300,"Sec
+retKey":2146681345}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ReadyForQue
+ry","TxStatus":"I"}
+2026/04/04 10:41:57 PG 
+Send: {"Type":"Parse","Nam
+e":"lrupsc_1_0","Query":"S
+ELECT version FROM supabas
+e_migrations.schema_migrat
+ions ORDER BY version","Pa
+rameterOIDs":null}
+2026/04/04 10:41:57 PG 
+Send: {"Type":"Describe","
+ObjectType":"S","Name":"lr
+upsc_1_0"}
+2026/04/04 10:41:57 PG 
+Send: {"Type":"Sync"}
+2026/04/04 10:41:57 PG 
+Recv: 
+{"Type":"ParseComplete"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ParameterDe
+scription","ParameterOIDs"
+:[]}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"RowDescript
+ion","Fields":[{"Name":"ve
+rsion","TableOID":17548,"T
+ableAttributeNumber":1,"Da
+taTypeOID":25,"DataTypeSiz
+e":-1,"TypeModifier":-1,"F
+ormat":0}]}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ReadyForQue
+ry","TxStatus":"I"}
+2026/04/04 10:41:57 PG 
+Send: {"Type":"Bind","Dest
+inationPortal":"","Prepare
+dStatement":"lrupsc_1_0","
+ParameterFormatCodes":null
+,"Parameters":[],"ResultFo
+rmatCodes":[0]}
+2026/04/04 10:41:57 PG 
+Send: {"Type":"Describe","
+ObjectType":"P","Name":""}
+2026/04/04 10:41:57 PG 
+Send: {"Type":"Execute","P
+ortal":"","MaxRows":0}
+2026/04/04 10:41:57 PG 
+Send: {"Type":"Sync"}
+2026/04/04 10:41:57 PG 
+Recv: 
+{"Type":"BindComplete"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"RowDescript
+ion","Fields":[{"Name":"ve
+rsion","TableOID":17548,"T
+ableAttributeNumber":1,"Da
+taTypeOID":25,"DataTypeSiz
+e":-1,"TypeModifier":-1,"F
+ormat":0}]}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"DataRow","V
+alues":[{"text":"202603141
+84838"}]}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"DataRow","V
+alues":[{"text":"202603152
+03201"}]}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"DataRow","V
+alues":[{"text":"202603152
+03641"}]}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"DataRow","V
+alues":[{"text":"202603152
+25235"}]}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"CommandComp
+lete","CommandTag":"SELECT
+ 4"}
+2026/04/04 10:41:57 PG 
+Recv: {"Type":"ReadyForQue
+ry","TxStatus":"I"}
+Do you want to push these 
+migrations to the remote 
+database?
+ ΓÇó 20260316000220_278a58
+b2-41be-4ea7-8b65-5b00461d
+33b1.sql
+ ΓÇó 20260316004322_b20265
+16-5d41-4bdc-aca2-e6d204ff
+5762.sql
+ ΓÇó 20260316023131_e9d46c
+54-97a9-42a0-a533-dc15c2c1
+28f5.sql
+ ΓÇó 20260316025019_b96e18
+3f-63b1-4411-962a-0cdb6295
+124f.sql
+ ΓÇó 20260316025314_493d3f
+42-d5ef-403a-9d2b-fe123646
+a3cc.sql
+ ΓÇó 20260317003652_322145
+31-f76b-45bf-b07a-aa37c40f
+69dd.sql
+ ΓÇó 20260317004427_785cbb
+06-5abc-4e3b-9ce0-43f5bc49
+2601.sql
+ ΓÇó 20260319024953_44955f
+74-3192-4ce5-b9da-6ca97299
+1551.sql
+ ΓÇó 20260403023821_6a8d3e
+af-fb5c-41d8-beaf-37ac1cc0
+bc3d.sql
+ ΓÇó 20260403023841_e4bd52
+b2-27d8-4ea5-b074-90f1e45a
+c5cc.sql
+ ΓÇó 20260403024426_e2159a
+26-6045-4d3f-aea1-ce2b7394
+2b65.sql
+ ΓÇó 20260404024023_015f14
+56-c919-47c7-bbb5-88007f10
+f9a9.sql
+ ΓÇó 20260404024251_899350
+4f-c22f-4e0e-a391-3e4edc36
+9141.sql
+
