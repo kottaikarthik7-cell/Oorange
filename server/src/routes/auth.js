@@ -71,7 +71,9 @@ router.post("/verify", (req, res) => {
   if (!user) return res.status(404).json({ error: "user_not_found" })
   stmts.markVerified.run(user.id)
   stmts.deleteCode.run(email)
-  res.json({ ok: true, user: publicUser(stmts.getUserById.get(user.id)) })
+  // Return a JWT so the client can log the user in immediately after verifying.
+  const token = signToken({ sub: user.id })
+  res.json({ ok: true, token, user: publicUser(stmts.getUserById.get(user.id)) })
 })
 
 // POST /auth/resend { email }
