@@ -50,18 +50,26 @@ export function AuthProvider({ children }) {
   }, [])
 
   const login = async (email, password) => {
-    const { token, user } = await api.login({ email, password })
-    applyToken(token); setUser(user)
-    return user
+    const resp = await api.login({ email, password })
+    if (!resp || !resp.token) throw new Error(resp?.error || "login_failed")
+    applyToken(resp.token); setUser(resp.user)
+    return resp.user
   }
   const signup = async (payload) => {
-    // returns { userId, needsVerification }
-    return api.signup(payload)
+    // Server returns { user, token, verificationRequired }. If the server
+    // already issued a token we use it so the app can drop straight into the
+    // verification screen while authenticated.
+    const resp = await api.signup(payload)
+    if (resp?.token) applyToken(resp.token)
+    if (resp?.user)  setUser(resp.user)
+    return resp || {}
   }
   const verify = async (email, code) => {
-    const { token, user } = await api.verify({ email, code })
-    applyToken(token); setUser(user)
-    return user
+    const resp = await api.verify({ email, code })
+    if (!resp) throw new Error("verify_failed")
+    if (resp.token) applyToken(resp.token)
+    if (resp.user)  setUser(resp.user)
+    return resp.user
   }
   const logout = () => {
     applyToken(""); setUser(null)
