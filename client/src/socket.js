@@ -4,7 +4,15 @@
 
 import { io } from "socket.io-client"
 
-const URL = import.meta.env.VITE_SOCKET_URL || ""   // blank -> same origin as Vite proxy
+// Normalize the socket URL: bare hostname from Render Blueprint gets https://
+// prefixed; blank means same-origin (dev uses the Vite proxy).
+function resolveSocketUrl(raw) {
+  if (!raw) return ""
+  if (raw.startsWith("http://") || raw.startsWith("https://")) return raw
+  if (raw.startsWith("/")) return raw
+  return "https://" + raw
+}
+const URL = resolveSocketUrl(import.meta.env.VITE_SOCKET_URL)
 
 let sock = null
 
