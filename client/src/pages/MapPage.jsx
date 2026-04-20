@@ -317,4 +317,37 @@ function ViewTab({ active, onClick, icon, label }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-sem
+      className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+        active ? "bg-white text-orange-600 shadow" : "text-neutral-500"
+      }`}
+    >
+      {icon}<span>{label}</span>
+    </button>
+  )
+}
+
+function distanceLabel(a, b) {
+  if (!a || !b) return ""
+  const toRad = (v) => (v * Math.PI) / 180
+  const R = 6371
+  const dLat = toRad(b[0] - a[0])
+  const dLng = toRad(b[1] - a[1])
+  const s =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a[0])) * Math.cos(toRad(b[0])) * Math.sin(dLng / 2) ** 2
+  const km = 2 * R * Math.asin(Math.sqrt(s))
+  if (km < 1) return `${Math.round(km * 1000)} m`
+  if (km < 10) return `${km.toFixed(1)} km`
+  return `${Math.round(km)} km`
+}
+
+function relativeWhen(unix) {
+  if (!unix) return "—"
+  const diff = unix - Math.floor(Date.now() / 1000)
+  if (diff < 0) return "live"
+  const hours = Math.round(diff / 3600)
+  if (hours < 1) return `in ${Math.max(1, Math.round(diff / 60))}m`
+  if (hours < 24) return `in ${hours}h`
+  const days = Math.round(hours / 24)
+  return `in ${days}d`
+}
