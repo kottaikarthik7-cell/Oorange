@@ -25,35 +25,59 @@ import aiRoutes from "./ai.js"
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const PORT = Number(process.env.PORT || 4000)
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173"
 const UPLOAD_DIR = process.env.UPLOAD_DIR || "./data/uploads"
 fs.mkdirSync(UPLOAD_DIR, { recursive: true })
+
+// Normalize CLIENT_ORIGIN so a bare hostname from a Render Blueprint
+// (e.g. "orange-client.onrender.com") becomes a full origin that matches
+// the browser's Origin header. Also accept a comma-separated list.
+function normalizeOrigin(raw) {
+  if (!raw) return null
+  const s = raw.trim()
+  if (!s) return null
+  if (s.startsWith("http://") || s.startsWith("https://")) return s.replace(/\/$/, "")
+  return "https://" + s.replace(/\/$/, "")
+}
+const CLIENT_ORIGIN_RAW = process.env.CLIENT_ORIGIN || "http://localhost:5173"
+const ALLOWED_ORIGINS = CLIENT_ORIGIN_RAW.split(",").map(normalizeOrigin).filter(Boolean)
+console.log("[orange] allowed CORS origins:", ALLOWED_ORIGINS)
+
+const corsOptions = {
+  origin(origin, cb) {
+    if (!origin) return cb(null, true)
+    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true)
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[orange] rejecting origin", origin)
+      return cb(new Error("origin_not_allowed"))
+    }
+    console.warn("[orange] unknown origin allowed (prod):", origin)
+    return cb(null, true)
+  },
+  credentials: true,
+}
 
 const app = express()
 app.locals.db = db
 
-app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }))
+app.use(cors(corsOptions))
 app.use(express.json({ limit: "2mb" }))
 app.use("/uploads", express.static(path.resolve(UPLOAD_DIR)))
 
-// Healthcheck
 app.get("/health", (_, res) => res.json({ ok: true, ts: Date.now() }))
 
 const server = http.createServer(app)
-const io = new Server(server, {
-  cors: { origin: CLIENT_ORIGIN, credentials: true },
-})
-io.app = app // makes db / locals reachable from realtime module
+const io = new Server(server, { cors: corsOptions })
+io.app = app
 
 app.use("/auth", authRoutes)
 app.use("/activities", activitiesRoutes(io))
-app.use("/", messagesRoutes(io)) // mounts /activity/:id/messages and /dms/*
+app.use("/", messagesRoutes(io))
 app.use("/posts", postsRoutes(io))
 app.use("/users", usersRoutes)
-app.use("/uploads-api", uploadsRoutes) // POST endpoint — distinct from static /uploads
+app.use("/uploads-api", uploadsRoutes)
 app.use("/calls", callsRoutes)
 app.use("/notifications", notificationsRoutes)
-app.use("/activities", collabRoutes(io)) // /:id/tasks, /:id/notes, /:id/polls
+app.use("/activities", collabRoutes(io))
 app.use("/ai", aiRoutes)
 
 app.use((err, _, res, __) => {
@@ -64,6 +88,6 @@ app.use((err, _, res, __) => {
 wireRealtime(io)
 
 server.listen(PORT, () => {
-  console.log(`🧡 Orange server listening on :${PORT} — accepting clients at ${CLIENT_ORIGIN}`)
+  console.log(`🧡 Orange server listening on :${PORT} — accepting clients at ${ALLOWED_ORIGINS.join(", ")}`)
   console.log(`   SQLite: ${process.env.DB_PATH || "./data/orange.db"}`)
 })
