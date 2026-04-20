@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Make the app feel native on mobile: no pull-to-refresh, full viewport height */
+html, body, #root {
+  height: 100%;
+  overscroll-behavior-y: contain;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+/* Hide scrollbars on horizontal chip rows */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+
+/* Leaflet fix — ensure map fills parent and z-stacks below UI chrome */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background: #f2ede4;
+}
+.leaflet-control-attribution {
+  font-size: 9px !important;
+  background: rgba(255,255,255,0.7) !important;
+}
+
+/* Custom Leaflet marker — orange dot with pulse */
+.orange-pin {
+  background: transparent;
+  border: none;
+}
+.orange-pin-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  border: 3px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+.orange-pin-user {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: #2563eb;
+  border: 3px solid white;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25);
+  animation: userPulse 2s infinite;
+}
+@keyframes userPulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25); }
+  50%      { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0.05); }
+}
+
+/* Subtle slide-in for toast/notifications */
+.animate-pop {
+  animation: pop 0.2s ease-out;
+}
+@keyframes pop {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}

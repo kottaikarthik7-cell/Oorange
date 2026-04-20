@@ -1,0 +1,58 @@
+# Render.com Blueprint — one-click deploy of the full stack.
+#
+# Step 1:  Put this project on GitHub (any public repo).
+# Step 2:  Go to https://render.com/deploy?repo=<your-repo-url>
+# Step 3:  Click "Apply Blueprint". Render creates two services.
+# Step 4:  Share the client URL with anyone — they can use the app live.
+
+services:
+  - type: web
+    name: orange-server
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install && node src/seed.js
+    startCommand: node src/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_PATH
+        value: /opt/render/project/src/data/orange.db
+      - key: UPLOAD_DIR
+        value: /opt/render/project/src/data/uploads
+      - key: CLIENT_ORIGIN
+        fromService:
+          type: web
+          name: orange-client
+          property: host
+    disk:
+      name: orange-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
+
+  - type: web
+    name: orange-client
+    runtime: static
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: orange-server
+          property: host
+      - key: VITE_SOCKET_URL
+        fromService:
+          type: web
+          name: orange-server
+          property: host
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
