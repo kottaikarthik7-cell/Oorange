@@ -1,37 +1,62 @@
-# Production-ish compose: one server container, one nginx+client container.
-# SQLite + uploads live in a named volume so they survive `docker compose up`.
-#
-# Usage:
-#   cp server/.env.example server/.env   # set JWT_SECRET, CLIENT_ORIGIN, etc.
-#   docker compose up --build
-#
-# Then hit http://localhost:8080 in a browser. First run seeds the demo data.
+version: '3.8'
 
 services:
-  server:
-    build: ./server
-    env_file: ./server/.env
-    environment:
-      - NODE_ENV=production
-      - DB_PATH=/app/data/orange.db
-      - UPLOAD_DIR=/app/data/uploads
-      - PORT=4000
-      - CLIENT_ORIGIN=http://localhost:8080
-    volumes:
-      - orange-data:/app/data
-    expose:
-      - "4000"
-    command: >
-      sh -c "node src/seed.js && node src/index.js"
-    restart: unless-stopped
-
-  client:
-    build: ./client
-    depends_on:
-      - server
+  db:
+    container_name: supabase-db
+    image: supabase/postgres:15.1.1.78
     ports:
-      - "8080:80"
-    restart: unless-stopped
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: Orange@12345678890
+      POSTGRES_DB: postgres
+    volumes:
+      - ./supabase/init-schemas.sql:/docker-entrypoint-initdb.d/00-init-schemas.sql
+      - ./supabase/migrations:/docker-entrypoint-initdb.d/migrations
+      - supabase_db_data:/var/lib/postgresql/data
+
+  auth:
+    container_name: supabase-auth
+    image: supabase/gotrue:v2.132.3
+    depends_on:
+      - db
+    environment:
+      GOTRUE_EXTERNAL_S3_ENABLED: "false"
+      GOTRUE_DB_PASSWORD: Orange@12345678890
+      GOTRUE_DB_DATABASE_URL: postgres://postgres:Orange@12345678890@db:5432/postgres?sslmode=disable
+      GOTRUE_SITE_URL: http://localhost:3000
+      GOTRUE_JWT_SECRET: super-secret-jwt-token-replace-me-later
+    ports:
+      - "9999:9999"
+
+  rest:
+    container_name: supabase-rest
+    image: postgrest/postgrest:v10.1.2
+    depends_on:
+      - db
+    environment:
+      PGRST_DB_URI: postgres://postgres:Orange@12345678890@db:5432/postgres
+      PGRST_DB_SCHEMA: public,auth
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: super-secret-jwt-token-replace-me-later
+    ports:
+      - "3000:3000"
+
+  realtime:
+    container_name: supabase-realtime
+    image: supabase/realtime:v2.25.23
+    depends_on:
+      - db
+    environment:
+      PORT: 4000
+      DB_HOST: db
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: Orange@12345678890
+      DB_PORT: 5432
+      JWT_SECRET: super-secret-jwt-token-replace-me-later
+      REPLICATION_MODE: "LR"
+    ports:
+      - "4000:4000"
 
 volumes:
-  orange-data:
+  supabase_db_data:
