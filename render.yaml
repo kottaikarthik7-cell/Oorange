@@ -22,18 +22,20 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: DB_PATH
-        value: /opt/render/project/src/data/orange.db
+        value: /tmp/orange.db
       - key: UPLOAD_DIR
-        value: /opt/render/project/src/data/uploads
+        value: /tmp/uploads
       - key: CLIENT_ORIGIN
         fromService:
           type: web
           name: orange-client
           property: host
-    disk:
-      name: orange-data
-      mountPath: /opt/render/project/src/data
-      sizeGB: 1
+    # NOTE: Render's free tier does not allow persistent disks, so the SQLite
+    # DB lives in /tmp and is wiped on every redeploy (and when the free-tier
+    # service sleeps after 15 min of inactivity). The seed script runs at build
+    # time so the demo data is always there. To keep real user data, upgrade
+    # to the "starter" plan ($7/mo) and add a `disk:` block pointing at
+    # /opt/render/project/src/data (and change DB_PATH / UPLOAD_DIR back).
 
   - type: web
     name: orange-client
